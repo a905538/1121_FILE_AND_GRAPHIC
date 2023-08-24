@@ -10,18 +10,15 @@
  * 7.結束檔案
  */
 
-
+$dataTR = "";
+$dataNO = "";
 if (!empty($_FILES['text']['tmp_name'])) {
-    echo "檔名是:" . $_FILES['text']['name'];
-    echo "<br>";
-    echo "檔案大小是:" . $_FILES['text']['size'];
-    echo "<hr>";
-
+    $dataNO .= "<tr><td>檔名是:" . $_FILES['text']['name'] . "</td></tr>";
+    $dataNO .= "<tr><td>檔案大小是:" . $_FILES['text']['size'] . "</td></tr>";
     move_uploaded_file($_FILES['text']['tmp_name'], "./doc/{$_FILES['text']['name']}");
     $path = "./doc/{$_FILES['text']['name']}";
     // 使用 'r' 模式來讀取檔案
     $file = fopen($path, "r");
-    $dataTR = "";
     // echo "<table>";
     if ($file) {
         // 讀取檔案到最後
@@ -66,6 +63,7 @@ function dd($data)
             box-shadow: 3px 3px 15px #aaa;
             padding: 20px;
             border-collapse: collapse;
+            margin: auto;
         }
 
         td {
@@ -82,7 +80,9 @@ function dd($data)
     <form action="?" method="post" enctype="multipart/form-data">
         <input type="file" name="text" id="text">
         <input type="submit" value="上傳">
+        <hr>
         <table>
+            <?= $dataNO; ?>
             <?= $dataTR; ?>
         </table>
     </form>
