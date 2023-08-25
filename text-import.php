@@ -1,5 +1,5 @@
 <?php
-
+include_once "DB.php";
 /****
  * 1.建立資料庫及資料表
  * 2.建立上傳檔案機制
@@ -12,9 +12,12 @@
 
 $dataTR = "";
 $dataNO = "";
+$dataPRE = "";
+$dataCount = 0;
 if (!empty($_FILES['text']['tmp_name'])) {
-    $dataNO .= "<tr><td>檔名是:" . $_FILES['text']['name'] . "</td></tr>";
-    $dataNO .= "<tr><td>檔案大小是:" . $_FILES['text']['size'] . "</td></tr>";
+    $dataPRE .= "檔名是:" . $_FILES['text']['name'];
+    $dataPRE .= "<br>";
+    $dataPRE .= "檔案大小是:" . $_FILES['text']['size'];
     move_uploaded_file($_FILES['text']['tmp_name'], "./doc/{$_FILES['text']['name']}");
     $path = "./doc/{$_FILES['text']['name']}";
     // 使用 'r' 模式來讀取檔案
@@ -28,11 +31,23 @@ if (!empty($_FILES['text']['tmp_name'])) {
             // $data = str_getcsv($line);
             $cols = explode(",", $line);
             // dd($data);
+            if ($dataCount == 0) {
+                $dataTR .= "<td>選取</td>";
+            } else {
+                $dataTR .= "<td><input type=\"checkbox\" name=\"data[]\"></td>";
+            }
             for ($i = 0; $i < count($cols); $i++) {
                 $dataTR .= "<td>" . $cols[$i] . "</td>";
             }
+            if ($dataCount == 0) {
+                $dataTR .= "<td>狀態</td>";
+            } else {
+                $dataTR .= "<td>狀態</td>";
+            }
+
             $dataTR .= "</tr>";
             // echo "<br>";
+            $dataCount++;
         }
         fclose($file);
     } else {
@@ -47,6 +62,7 @@ function dd($data)
     print_r($data);
     echo "</pre>";
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -79,12 +95,16 @@ function dd($data)
     <!---建立檔案上傳機制--->
     <form action="?" method="post" enctype="multipart/form-data">
         <input type="file" name="text" id="text">
-        <input type="submit" value="上傳">
+        <input type="submit" value="載入資料">
+        <input type="button" value="上傳資料庫">
+        <button onclick=""></button>
         <hr>
+        <?= $dataPRE; ?>
         <table>
             <?= $dataNO; ?>
             <?= $dataTR; ?>
         </table>
+        合計匯入資料表筆數:<?= $dataCount-1; ?>筆
     </form>
 
 
